@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paylio - Crypto Dashboard</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #b0f127;
+            --dark-bg: #0f172a;
+            --card-bg: #1e293b;
+        }
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+        }
+        .sidebar {
+            background-color: var(--card-bg);
+            transition: all 0.3s;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(176, 241, 39, 0.1);
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--dark-bg);
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .glow {
+            box-shadow: 0 0 15px rgba(176, 241, 39, 0.2);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="sidebar fixed h-full w-64 p-4 hidden md:block">
+            <div class="flex items-center mb-8">
+                <span class="text-2xl font-bold text-green-400">Paylio</span>
+            </div>
+            <nav class="space-y-4">
+                <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-grid-1x2-fill text-green-400"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-graph-up text-green-400"></i>
+                    <span>Market</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-wallet2 text-green-400"></i>
+                    <span>Portfolio</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700">
+                    <i class="bi bi-gear-fill text-green-400"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-0 md:ml-64 min-h-screen">
+            <!-- Header -->
+            <header class="bg-gray-800 p-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center">
+                        <button class="md:hidden mr-4" onclick="toggleSidebar()">
+                            <i class="bi bi-list text-2xl"></i>
+                        </button>
+                        <div class="relative">
+                            <input type="text" placeholder="Search..." class="bg-gray-700 rounded-lg px-4 py-2 w-64">
+                            <i class="bi bi-search absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="p-2 hover:bg-gray-700 rounded-full">
+                            <i class="bi bi-bell text-xl"></i>
+                        </button>
+                        <div class="flex items-center space-x-2">
+                            <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=Felix" alt="Profile" class="w-8 h-8 rounded-full">
+                            <span>John Doe</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="p-6 space-y-6">
+                <!-- Overview Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card rounded-xl p-6 glow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400">Total Balance</p>
+                                <h3 class="text-2xl font-bold">$24,563.00</h3>
+                                <p class="text-green-400">+2.5%</p>
+                            </div>
+                            <i class="bi bi-wallet2 text-3xl text-green-400"></i>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-6 glow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400">Paylio Balance</p>
+                                <h3 class="text-2xl font-bold">1,234,567 PLO</h3>
+                                <p class="text-green-400">Supply: 100B</p>
+                            </div>
+                            <i class="bi bi-coin text-3xl text-green-400"></i>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-6 glow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400">24h Volume</p>
+                                <h3 class="text-2xl font-bold">$12,345.67</h3>
+                                <p class="text-red-400">-1.2%</p>
+                            </div>
+                            <i class="bi bi-graph-up text-3xl text-green-400"></i>
+                        </div>
+                    </div>
+                    <div class="card rounded-xl p-6 glow">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-400">Market Cap</p>
+                                <h3 class="text-2xl font-bold">$1.2B</h3>
+                                <p class="text-green-400">+5.3%</p>
+                            </div>
+                            <i class="bi bi-globe text-3xl text-green-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="card rounded-xl p-6 glow">
+                    <h2 class="text-xl font-bold mb-4">Paylio Price Chart</h2>
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card rounded-xl p-6 glow">
+                    <h2 class="text-xl font-bold mb-4">Recent Transactions</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-gray-400">
+                                    <th class="pb-4">Date</th>
+                                    <th class="pb-4">Type</th>
+                                    <th class="pb-4">Amount</th>
+                                    <th class="pb-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-t border-gray-700">
+                                    <td class="py-4">2024-01-20</td>
+                                    <td class="py-4">Buy</td>
+                                    <td class="py-4">1,000 PLO</td>
+                                    <td class="py-4"><span class="bg-green-400/20 text-green-400 px-2 py-1 rounded-full">Completed</span></td>
+                                </tr>
+                                <tr class="border-t border-gray-700">
+                                    <td class="py-4">2024-01-19</td>
+                                    <td class="py-4">Sell</td>
+                                    <td class="py-4">500 PLO</td>
+                                    <td class="py-4"><span class="bg-green-400/20 text-green-400 px-2 py-1 rounded-full">Completed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Price Chart
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Paylio Price',
+                    data: [0.01, 0.015, 0.012, 0.018, 0.016, 0.02],
+                    borderColor: '#b0f127',
+                    backgroundColor: 'rgba(176, 241, 39, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#fff'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#fff'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Simulate live price updates
+        setInterval(() => {
+            const prices = document.querySelectorAll('.price');
+            prices.forEach(price => {
+                const currentPrice = parseFloat(price.textContent);
+                const change = (Math.random() - 0.5) * 0.001;
+                price.textContent = (currentPrice + change).toFixed(4);
+            });
+        }, 2000);
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
